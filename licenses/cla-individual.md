@@ -228,3 +228,5 @@ vouko, @vouko 2015/05/02
 Christian Ehmke, @cehmke 2015/05/10
 
 kixam, @kixam, 2015/05/27
+
+Marc Viot @idoine, 2015/05/31
