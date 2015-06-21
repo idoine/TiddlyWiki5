@@ -1,51 +1,66 @@
-caption: toc
 created: 20140919155729620
-modified: 20150105102807522
-tags: Macros
-title: TableOfContentsMacro
+modified: 20150621070335484
+tags: Macros [[Core Macros]]
+title: Table-of-Contents Macros
 type: text/vnd.tiddlywiki
+fr-title: Macros Tables des matières
 
-La macro //~TableOfContents// (Table des Matières) produit une arborescence hiérarchique de tiddlers, en se basant sur leurs tags.
+~TiddlyWiki fournit plusieurs macros permettant de générer une arborescence de liens vers des tiddlers à partir de l'analyse des  [[tags|Tagging]]<<:>>
 
-Les entrées de premier niveau de la table des matières sont définies par un tag racine. Les sous-entrées de chacune de ces entrées sont taguées avec le titre de l'entrée. Les entrées peuvent être triées à l'aide du champ `list` du tiddler de tag correspondant, comme décrit dans [[Tagging]].
+;<<.var toc>>
+: Un arbre simple
+;<<.var toc-expandable>>
+: Un arbre dont les branches peuvent être déployées ou rétractées
+;<<.var toc-selective-expandable>>
+: Un arbre dont les branches non-vides peuvent être déployées ou rétractées
+;<<.var toc-tabbed-internal-nav>> et <<.var toc-tabbed-external-nav>>
+: Une navigation en deux panneaux<<:>>
+:* sur la gauche, une arborescence extensible sélectivement se comportant comme un ensemble d'onglets verticaux
+:* sur la droite, le contenu du tiddler sélectionné par l'utilisateur dans l'arborescence
 
-Le libellé utilisé pour chaque entrée est tiré du champ ''caption'' s'il est présent<<;>> dans le cas contraire, c'est le titre (champ ''title'') qui est utilisé.
+La différence entre ces deux derniers provient de ce qu'il advient lors d'un clic de l'utilisateur sur un lien du panneau droit<<:>>
 
-Les entrées sont affichées sous forme de liens vers le tiddler correspondant, à moins que le tiddler contienne un champ ''toc-link'' avec la valeur ''no''. Dans les exemples ci-dessous, l'entrée SecondThree est configurée ainsi, de manière à ne pas apparaître comme un lien.
+;<<.var toc-tabbed-internal-nav>>
+: Le tiddler cible s'affiche dans le panneau droit, remplaçant le tiddler contenant le lien
+;<<.var toc-tabbed-external-nav>>
+: Le tiddler cible s'affiche de façon classique (selon la configuration de l'affichage du déroulé par l'utilisateur)
 
-Il existe plusieurs variantes de cette macro<<:>>
+!! Structure
 
-* `<<toc>>` produit une arborescence hiérarchique de liens simple
-* `<<toc-expandable>>` produit une arborescence de liens développable
-* `<<toc-selective-expandable>>` produit une arborescence de liens développable où les boutons développer / contracter ne sont affichés que pour les entrées qui possèdent des nœuds fils
+Le premier niveau de l'arborescence est constitué de tiddlers qui portent une étiquette particulière, appelé <<.def "tag racine">>. Les tiddlers marqués par l'un de ceux-là forment le niveau suivant, et ainsi de suite.
 
-Les macros génèrent des listes HTML ordonnées. Les éléments `<ol>` bénéficient de la classe `tc-toc`, ceux de la variante //expandable// bénéficiant également de la classe `tc-toc-expandable` tandis que ceux de la variante //selective expandable// bénéficient de la classe `tc-toc-selective-expandable`.
+À chaque niveau, les tidllers peuvent être [[ordonnés|Order of Tagged Tiddlers]] 
+via le champ <<.field list>> de leur tiddler tag parent. Ils peuvent aussi être triés en paramétrant la macro <<.param sort>>
 
-! Paramètres
+L'arborescence affiche le champ <<.field caption>> du tiddler s'il en a un, sinon son titre.
 
-|!Position |!Nom |!Description |!Défaut |
-|1^^re^^ |tag |Le tag racine qui identifie le premier niveau de la hiérachie | |
-|2^^e^^ |sort |Sous-fitre optionnel de tri (par exemple `sort[title]`) | |
+Chaque tiddler est affiché comme un lien, mais vous pouvez règler ceci en affectant la valeur <<.value no>> au champ <<.field toc-link>> du tiddler. Ainsi dans cet [[exemple|Table-of-Contents Macros (Examples)]], le tiddler SecondThree est affecté de la sorte. Cliquer sur un tel tiddler dans l'arborescence permettra de déployer ou rétracter sa branche.
 
-Les paramètres ''tag'' et ''sort'' sont combinés pour construire une expression de filtre de la forme<<:>>
+La table des matières génère une liste HTML ordonnée. Les balises `<ol>` ont toujours la classe `tc-toc`. Les éléments d'arborescences déployables ont la classe additionnelle `tc-toc-expandable`. Les arborescence déployables sélectivement (dont celles du deuxième panneau de navigation) sont munies de `tc-toc-selective-expandable`.
 
-```
-[tag[$tag$]$sort$]
-```
+Pour intégrer une table des matières dans le menu latéral, voir [[un nouvel onglet dans le menu latéral|How to add a new tab to the sidebar]].
 
-! Exemples
+!! Paramètres
 
-Dans les exemples suivants, les entrées de premier niveau de la table des matières sont définies par leur tag racine ''Contents''. Les sous-entrées sous chacune de ces entrées sont taguées avec le titre de leur parent, ici ''First'', ''Second'', ''Third'', et ''Fourth''. Au niveau du dessous, seul ''~SecondThree'' comporte des sous-entrées.
+;tag
+: Le tag racine indiquant le premier niveau de l'arborescence
+;sort
+: Une extra [[étape de filtre|Filter Step]] optionelle, e.g. `sort[title]`
 
-Voici la structure des tags, affichée à l'aide de pastilles de tag cliquables<<:>>
+Ces deux paramètres sont combinés en une seule [[expression de filtre|Filter Expression]] de cette façon<<:>>
 
-{{Contents||$:/core/ui/TagTemplate}}
-*{{First||$:/core/ui/TagTemplate}}
-*{{Second||$:/core/ui/TagTemplate}}
-**{{SecondThree||$:/core/ui/TagTemplate}}
-*{{Third||$:/core/ui/TagTemplate}}
-*{{Fourtth||$:/core/ui/TagTemplate}}
+> `[tag[$tag$]$sort$]`
 
-Pour des instructions sur la manière d'ajouter une table des matières dans la barre latérale, voyez<<:>> [[Comment ajouter un nouvel onglet dans la barre latérale|How to add a new tab to the sidebar]].
+<<.var toc-tabbed-internal-nav>> et <<.var toc-tabbed-external-nav>> ont, en sus, d'autres paramètres<<:>>
 
-<<tabs "[tag[table-of-contents-example]]" "TableOfContentsMacro Simple Example">>
+;selectedTiddler
+: Le titre du [[tiddler d'état|StateMechanism]] attribué au tiddler en cours sélectionné, par défaut `$:/temp/toc/selectedTiddler`. Il est recommandé d'employer un [[tiddler système|SystemTiddlers]]
+;unselectedText
+: Le texte affiché quand aucun tiddler n'est sélectionné dans l'arborescence
+;missingText
+: Le texte affiché si le tiddler sélectionné est manquant
+;template
+: De manière optionnelle, le titre du tiddler [[gabarit|TemplateTiddlers]] lors de la transclusion du tiddler sélectionné dans le panneau de droite
+
+[[Exemples|Table-of-Contents Macros (Examples)]]
+
